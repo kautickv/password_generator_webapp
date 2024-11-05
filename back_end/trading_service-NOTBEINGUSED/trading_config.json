@@ -1,8 +1,0 @@
-{
-    "ssm_parameter_paths_crypto.com_keys": {
-      "access_key": "/crypto-exchange/crypto.com/api-key",
-      "secret_key": "/crypto-exchange/crypto.com/secret-key"
-      
-    }
-}
-  

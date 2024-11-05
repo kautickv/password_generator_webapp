@@ -59,7 +59,7 @@ const Navbar = () => {
   const drawer = (
     <div>
       <List>
-        {["Home", "Link Manager", "Formatter", "Option 4"].map((text, index) => (
+        {["Home", "Link Manager", "Formatter", "Portfolio"].map((text, index) => (
           <ListItem button key={text} onClick={() => handleNavigation(`/${text.toLowerCase().replace(" ", "-")}`)}>
             <ListItemText primary={text} />
           </ListItem>
@@ -110,7 +110,7 @@ const Navbar = () => {
             sx={{ flexGrow: 1, display: "flex", justifyContent: "center" }}
             style={{ color: theme.palette.primary.contrastText }}
           >
-            {["Home", "Link Manager", "Formatter", "Option 4"].map((text, index) => (
+            {["Home", "Link Manager", "Formatter", "Portfolio"].map((text, index) => (
               <Typography
                 key={index}
                 variant="body1"

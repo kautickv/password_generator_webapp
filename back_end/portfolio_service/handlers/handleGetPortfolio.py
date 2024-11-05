@@ -1,7 +1,7 @@
 from common.CommonUtility import CommonUtility
 from utils.CryptoDotComExchangeManager import CryptoDotComExchangeManager
 
-def handleGetTrading(event):
+def handleGetPortfolio(event):
     
     try:
         # Initialize CommonUtility Class
@@ -10,7 +10,7 @@ def handleGetTrading(event):
         cryptoExchange = CryptoDotComExchangeManager()
 
         # Get current BTC price
-        cryptoExchange.getCrrentPriceForTicker("BTC", "USD")
+        return cryptoExchange.getCrrentPriceForTicker("BTC", "USD")
     except Exception as e:
         print(f"handleGetTrading(): ${e}")
         return common_utility.buildResponse(500, "A server error occurred. Please try again later")

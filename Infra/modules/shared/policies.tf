@@ -141,3 +141,21 @@ resource "aws_iam_policy" "jsonviewer_s3_policy" {
     ]
   })
 }
+
+##--------------------------------------------------------------------------------------------------------------------------------
+## Policy to give read/write access to Crypto_asset table
+resource "aws_iam_policy" "crypto_assets_dynamodb_policy" {
+  name        = "${var.app_name}_crypto_assets_DynamoDB_Policy"
+  description = "Policy for Crypto Assets DynamoDB access"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect   = "Allow",
+        Action   = "dynamodb:*",
+        Resource = "${module.crypto_assets_dynamodb_table.table_arn}"
+      }
+    ]
+  })
+}

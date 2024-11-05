@@ -2,6 +2,7 @@ import React from "react";
 import { SnackbarProvider } from 'notistack'; 
 import Home from "./components/Home";
 import Login from "./components/Login"
+import Portfolio from "./components/Portfolio"
 import MultiTabOpener from "./components/MultiTabOpener"
 import { AuthProvider } from './context/AuthContext';
 import Formatter from "./components/Formatter"
@@ -45,6 +46,7 @@ function App() {
               <Route path='/home' element={<Home />} />
               <Route path='/link-manager' element={<MultiTabOpener />} />
               <Route path='/formatter' element={<Formatter />} />
+              <Route path='/portfolio' element={<Portfolio />} />
               <Route exact path='/' element={<Home />} />
             </Routes>
           </BrowserRouter>

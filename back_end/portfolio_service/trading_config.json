@@ -1,0 +1,8 @@
+{
+    "ssm_parameter_paths_crypto.com_keys": {
+      "access_key": "/password-generator/crypto.com-exchange/public-api-key",
+      "secret_key": "/password-generator/crypto.com-exchange/secret-api-key"
+      
+    }
+}
+  

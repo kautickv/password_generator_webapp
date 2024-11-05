@@ -1,6 +1,6 @@
 from common.CommonUtility import CommonUtility
 
-def handlePostTrading(event):
+def handlePostPortfolio(event):
 
     # Initialize CommonUtility Class
     common_utility = CommonUtility()

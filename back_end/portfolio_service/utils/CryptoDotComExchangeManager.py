@@ -146,6 +146,97 @@ class CryptoDotComExchangeManager:
             raise Exception(f"(Crypto.com)Could not get ticker price: {e}")
 
 
+    def getCryptoComBalancesInUSD(self, min_usd_value=0.1):
+        ##
+        # PURPOSE: Get the balance for all coins in the account, along with their USD equivalents,
+        #          filtering out coins without USD prices or with values below a specified minimum.
+        # INPUT: min_usd_value is the minimum USD value to include in balance. Defaults to USD $0.1.
+        # OUTPUT: A list of dictionaries containing coins and their USD value if available.
+        ##
+
+        try:
+            # Prepare the payload for retrieving balances
+            payload = {
+                "id": 11,
+                "method": "private/get-account-summary",
+                "api_key": self.api_access_key,
+                "params": {},  # Empty params to get balances for all coins
+                "nonce": int(time.time() * 1000),
+            }
+
+            # Add digital signature
+            payload['sig'] = self._generateSignedPayload(payload)
+
+            # Send request to get all balances
+            response = requests.post(self.api_base_url + payload['method'], json=payload)
+
+            if response.status_code == 200:
+                print("Request success")
+                balance_data = response.json()
+                if balance_data["code"] != 0:
+                    raise Exception(f"Crypto.com returned an error: {response.text}")
+
+                # Initialize list to hold balances with USD values
+                balances_in_usd = []
+
+                # Process each balance entry
+                for account in balance_data["result"]["accounts"]:
+                    currency = account['currency']
+                    balance = float(account['balance'])
+
+                    # Skip if balance is zero
+                    if balance == 0:
+                        continue
+
+                    # Get USD price for each currency
+                    usd_price = self._getCurrentPriceInUSD(currency)
+
+                    # Calculate USD value and filter by minimum value
+                    if usd_price is not None:
+                        balance_usd_value = balance * usd_price
+                        if balance_usd_value >= min_usd_value:
+                            balances_in_usd.append({
+                                "currency": currency,
+                                "balance": balance,
+                                "usd_value": balance_usd_value
+                            })
+
+                return balances_in_usd
+
+            else:
+                raise Exception(f"(Crypto.com) Could not retrieve account balances. Error: {response.text}")
+        
+        except Exception as e:
+            print(f"getCryptoComBalancesInUSD(): {e}")
+            raise Exception(f"(Crypto.com) Could not retrieve balances with USD equivalents. {e}")
+
+    
+    def _getCurrentPriceInUSD(self, ticker):
+        ##
+        # PURPOSE: Helper function to get the USD price for a given ticker.
+        # INPUT: Ticker symbol as a string, e.g., BTC, ETH.
+        # OUTPUT: Current price in USD for the ticker.
+        ##
+
+        try:
+            response = requests.get(f"{self.api_base_url}public/get-ticker?instrument_name={ticker}_USD")
+                
+            if response.status_code == 200:
+                price_data = response.json()
+                if price_data["code"] == 0:
+                    return float(price_data['result']['data'][0]['a'])  # Best ask price in USD
+                else:
+                    print(f"(Crypto.com) Could not retrieve USD price for {ticker}")
+                    return None
+            else:
+                print(f"(Crypto.com) Could not retrieve USD price for {ticker}")
+                return None
+            
+        except Exception as e:
+            print(f"_getCurrentPriceInUSD(): {e}")
+            raise Exception(f"(Crypto.com) Could not get USD price for ticker {ticker}")
+
+
     def _generateSignedPayload(self, payload):
         ##
         # PURPOSE: Private methods needs a digital signature. This method will generate the 
@@ -195,6 +286,7 @@ class CryptoDotComExchangeManager:
         # INPUT: none
         # OUTPUT: An array [access Key, secret Key]
         ##
+
         try:
             # Create a Boto3 client for SSM
             ssm_client = boto3.client('ssm')

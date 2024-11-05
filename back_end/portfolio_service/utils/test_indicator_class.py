@@ -1,11 +1,18 @@
 from Indicators import Indicators
 from BinanceExchangeManager import BinanceExchangeManager
-import matplotlib.pyplot as plt
+from CryptoDotComExchangeManager import CryptoDotComExchangeManager
+#import matplotlib.pyplot as plt
 from datetime import datetime
-import pytz
-import mplcursors
-import matplotlib.dates as mdates
+#import pytz
+#import mplcursors
+#import matplotlib.dates as mdates
 
+
+cryptoExchange = CryptoDotComExchangeManager()
+balance = cryptoExchange.getCryptoComBalancesInUSD()
+print(balance)
+
+'''
 binanceExchange = BinanceExchangeManager()
 data = binanceExchange.getTimeSeriesDataForTicker("BTC", "USDT", "6h")
 
@@ -116,4 +123,4 @@ bollinger_bands = indicator.calculate_bollinder_bands(20,2)
 plotInitialPriceData(data,ema_12, ema_26, "BTC closing price vs time",rsi_data, volume_ema_data, bollinger_bands)
 
 
-
+'''
